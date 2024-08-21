@@ -4,8 +4,7 @@ import Header from './components/Header/index'
 import { GlobalCss } from '../src/styles'
 
 import Rotas from './routes'
-
-// configuracao das todas de link
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -16,6 +15,7 @@ function App() {
         <Header />
       </div>
       <Rotas />
+      <Footer />
     </BrowserRouter>
   )
 }
