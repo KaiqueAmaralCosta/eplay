@@ -1,95 +1,52 @@
 import Banner from '../../components/Banner'
 import ProductsList from '../../components/ProductsList'
-import Game from '../../models/Game'
-import resident from '../../Assets/images/resident.png'
-import zelda from '../../Assets/images/zelda.png'
-import diablo from '../../Assets/images/diablo.png'
-import starWars from '../../Assets/images/star_wars.png'
 
-const promocoes: Game[] = [
-  {
-    id: 1,
-    category: 'Ação',
-    description: 'Resident',
-    system: 'Steam',
-    title: 'Resident 4 Remake',
-    infos: ['10%', 'R$ 250,00'],
-    image: resident
-  },
-  {
-    id: 2,
-    category: 'Ação',
-    description: 'Zelda',
-    system: 'Nintendo Switch',
-    title: 'Resident 4 Remake',
-    infos: ['10%', 'R$ 380,00'],
-    image: zelda
-  },
-  {
-    id: 3,
-    category: 'RPG',
-    description: 'Diablo',
-    system: 'PS5',
-    title: 'Resident 4 Remake',
-    infos: ['10%', 'R$ 250,00'],
-    image: diablo
-  },
-  {
-    id: 4,
-    category: 'Aventura',
-    description: 'Star Wars',
-    system: 'Steam',
-    title: 'Resident 4 Remake',
-    infos: ['10%', 'R$ 250,00'],
-    image: starWars
+import { useGetOnSaleQuery, useGetSoonQuery } from '../../services/api'
+
+export interface GalleryItem {
+  type: 'image' | 'video'
+  url: string
+}
+
+export type Game = {
+  id: number
+  name: string
+  description: string
+  release_date?: string
+  prices: {
+    discount?: number
+    old?: number
+    current?: number
   }
-]
-
-const emBreve: Game[] = [
-  {
-    id: 5,
-    category: 'Ação',
-    description: 'Resident',
-    system: 'Steam',
-    title: 'Resident 4 Remake',
-    infos: ['10%', 'R$ 250,00'],
-    image: resident
-  },
-  {
-    id: 6,
-    category: 'Ação',
-    description: 'Zelda',
-    system: 'Nintendo Switch',
-    title: 'Resident 4 Remake',
-    infos: ['10%', 'R$ 380,00'],
-    image: zelda
-  },
-  {
-    id: 7,
-    category: 'RPG',
-    description: 'Diablo',
-    system: 'PS5',
-    title: 'Resident 4 Remake',
-    infos: ['15%', 'R$ 225,00'],
-    image: diablo
-  },
-  {
-    id: 8,
-    category: 'Aventura',
-    description: 'Star Wars',
-    system: 'Steam',
-    title: 'Resident 4 Remake',
-    infos: ['10%', 'R$ 250,00'],
-    image: starWars
+  details: {
+    category: string
+    system: string
+    developer: string
+    publisher: string
+    languages: string[]
   }
-]
+  media: {
+    thumbnail: string
+    cover: string
+    gallery: GalleryItem[]
+  }
+}
 
-const Home = () => (
-  <>
-    <Banner />
-    <ProductsList games={promocoes} title="Promoções" background="gray" />
-    <ProductsList games={emBreve} title="Em breve" background="black" />
-  </>
-)
+const Home = () => {
+  const { data: onSaleGames } = useGetOnSaleQuery()
+  const { data: soonGames } = useGetSoonQuery()
+
+  if (onSaleGames && soonGames) {
+    return (
+      <>
+        <Banner />
+        <ProductsList games={onSaleGames} title="Promoções" background="gray" />
+        <ProductsList games={soonGames} title="Em breve" background="black" />
+      </>
+    )
+  }
+
+  return <h4>Carregando...</h4>
+}
 
 export default Home
